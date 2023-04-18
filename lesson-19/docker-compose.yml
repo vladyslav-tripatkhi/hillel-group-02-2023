@@ -1,0 +1,19 @@
+version: "3"
+services:
+  jupyter:
+    image: jupyter/datascience-notebook:latest
+    container_name: jupyter
+    ports:
+      - 8888:8888
+    working_dir: /opt/workdir
+    volumes:
+      - ./jupyter-lab:/opt/workdir
+    environment:
+      JUPYTER_ENABLE_LAB: "yes"
+      JUPYTER_TOKEN: "docker"
+    networks:
+      - lesson19
+
+networks:
+  lesson19:
+
