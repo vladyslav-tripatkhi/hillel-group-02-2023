@@ -17,7 +17,7 @@ variable "name" {
   type = string
 }
 
-variable "nginx_port" {
+variable "port" {
   type    = number
   default = 8181
 }
@@ -31,4 +31,22 @@ variable "security_group_id" {
     condition     = var.security_group_id == "" || startswith(var.security_group_id, "sg-")
     error_message = "Security Group Id must start with the prefix sg-."
   }
+}
+
+variable "user_data" {
+  type        = string
+  default     = ""
+  description = "description"
+}
+
+locals {
+  user_data = var.user_data != "" ? var.user_data : <<EOF
+#!/usr/bin/env bash
+yum install -y docker
+usermod -aG docker ec2-user
+systemctl enable docker
+systemctl start docker
+docker run -d --name nginx -p ${var.port}:80 nginx:alpine
+
+  EOF
 }
